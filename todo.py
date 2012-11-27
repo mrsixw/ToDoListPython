@@ -3,8 +3,9 @@
 # Command line to do list as per Faye's spec
 
 import time
+import pickle
 
-__author__ = 'williast'
+__author__ = 'mrsixw'
 
 taskList = []
 
@@ -53,6 +54,8 @@ def addNew():
 
     taskList.append(task)
     taskList.sort()
+
+    pickle.dump(taskList, open("todo.pickle", "wb"))
     return
 
 def parseInput(input_string):
@@ -60,6 +63,8 @@ def parseInput(input_string):
     return
 
 while True:
+    # load the pickle file of todo list
+    taskList = pickle.load(open("todo.pickle","rb"))
     print("")
     displayCurrentItems()
     print("")
