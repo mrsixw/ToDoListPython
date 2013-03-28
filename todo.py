@@ -1,19 +1,46 @@
-#! /bin/env python
+#!/usr/bin/env python
 
 # Command line to do list as per Faye's spec
 
 import time
 import pickle
+import datetime
+
 
 __author__ = 'mrsixw'
+
 
 taskList = []
 
 class TaskContainer:
-    def __init__(self, description, duedate):
+    def __init__(self, description, duedate = datetime.date.today() , complete = False):
         self.due = duedate
         self.description = description
-        self.complete = False
+        self.complete = complete
+
+    def makeComplete(self):
+        self.complete = True
+
+    def setDescription(self, description):
+        self.description = description
+
+    def setNewCompleteDate(self, newDate = datetime.date.today):
+        self.due = newDate
+
+
+class TaskList:
+
+    TASK_FILE = "todo.pickle"
+
+    def __init__(self):
+        self.taskList = []
+
+    def saveList(self):
+        """Saves the task list to persistent storage"""
+        file = open(TaskList.TASK_FILE,"wb")
+
+        close(file)
+
 
 
 
@@ -42,6 +69,8 @@ def getDate():
             dateValid = True
         except ValueError, valErr:
             print("Invalid time : "+str(valErr))
+
+
     return date
 
 
@@ -53,13 +82,13 @@ def addNew():
     task = TaskContainer(taskDescription,None)
 
     taskList.append(task)
-    taskList.sort()
 
     pickle.dump(taskList, open("todo.pickle", "wb"))
     return
 
 def parseInput(input_string):
     """ Parses the input of the     """
+    # regex
     return
 
 while True:
@@ -69,9 +98,8 @@ while True:
     displayCurrentItems()
     print("")
 
-    print("(n) New Task (q) Quit  | Or enter task number plus (c)omplete (w)orked (r) return to new")
     # note to self, raw_input gives you back string. input() grabs the string and tries to evaulate it.
-    menuOption = raw_input("")
+    menuOption = raw_input("(n) New Task (q) Quit  | Or enter task number plus (c)omplete (w)orked (r) return to new")
 
     if menuOption == 'q':
         print("Bye")
