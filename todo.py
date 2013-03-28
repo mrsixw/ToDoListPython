@@ -8,9 +8,6 @@ import datetime
 
 __author__ = 'mrsixw'
 
-taskList = []
-
-
 class TaskContainer:
     def __init__(self, description, duedate=datetime.date.today(), complete=False):
         self.due = duedate
@@ -29,26 +26,34 @@ class TaskContainer:
 
 class TaskList:
     TASK_FILE = "todo.pickle"
+    tasklist = []
 
     def __init__(self):
-        self.taskList = []
+        self.list = []
 
     def saveList(self):
         """Saves the task list to persistent storage"""
         pickle_file = open(TaskList.TASK_FILE, "wb")
-        close(pickle_file)
+        pickle.dump(self.list, pickle_file)
+        pickle_file.close()
 
+    def loadList(self):
+        pickle_file = open(TaskList.TASK_FILE, "rb")
+       # self.list = pickle.load(pickle_file)
+        pickle_file.close()
 
-def displayCurrentItems():
-    print("----------------------------------")
-    print("AutoFocus Task List Python Edition")
-    print("----------------------------------")
-
-    if len(taskList) == 0:
-        print("No tasks")
-    else:
-        for x in taskList:
+    def displayCurrnetTasks(self):
+        for x in self.list:
             print(x.description)
+
+    def addTask(self, task):
+
+        print type(self.list)
+        #print type(self.tasklist)
+
+        self.list.append(task)
+
+
 
 
 def getDate():
@@ -68,16 +73,16 @@ def getDate():
     return date
 
 
-def addNew():
-    taskDescription = raw_input("Please enter the task descrption :- ")
-    taskDate = getDate()
-    print("TASK: " + taskDescription + " DUE ON: " + time.strftime("%d/%m/%Y", taskDate))
+def addNew(taskList):
+    taskDescription =  "Steve "# raw_input("Please enter the task descrption :- ")
+   # taskDate = getDate()
+#    print("TASK: " + taskDescription + " DUE ON: " + time.strftime("%d/%m/%Y", taskDate))
 
     task = TaskContainer(taskDescription, None)
 
-    taskList.append(task)
+    taskList.addTask(task)
 
-    pickle.dump(taskList, open("todo.pickle", "wb"))
+#    pickle.dump(taskList, open("todo.pickle", "wb"))
     return
 
 
@@ -87,20 +92,19 @@ def parseInput(input_string):
     return
 
 
+tasks = TaskList()
+tasks.loadList()
+
 while True:
-    # load the pickle file of todo list
-    taskList = pickle.load(open("todo.pickle", "rb"))
-    print("")
-    displayCurrentItems()
-    print("")
 
     # note to self, raw_input gives you back string. input() grabs the string and tries to evaluate it.
-    menuOption = raw_input("(n) New Task (q) Quit  | Or enter task number plus (c)omplete (w)orked (r) return to new")
+    menuOption = 'n'#raw_input("(n) New Task (q) Quit  | Or enter task number plus (c)omplete (w)orked (r) return to new")
 
     if menuOption == 'q':
         print("Bye")
+        tasks.saveList()
         break
     elif menuOption == 'n':
-        addNew()
+        addNew(tasks)
     else:
         parseInput(menuOption)
